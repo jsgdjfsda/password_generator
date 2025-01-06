@@ -35,7 +35,7 @@ defmodule PasswordGenerator.Words do
   defp transform_words(words, options) do
     words
     |> Enum.map(fn word ->
-      word = if options.uppercase, do: capitalize_first(word), else: word
+      word = if options.uppercase, do: randomize_case(word), else: word
 
       if options.numbers do
         word <> Integer.to_string(Enum.random(0..9))
@@ -45,8 +45,19 @@ defmodule PasswordGenerator.Words do
     end)
   end
 
-  defp capitalize_first(<<first::utf8, rest::binary>>) do
-    String.upcase(<<first::utf8>>) <> rest
+  defp randomize_case(word) do
+    word
+    |> String.graphemes()
+    |> Enum.map(&random_uppercase/1)
+    |> Enum.join()
   end
-  defp capitalize_first(other), do: other
+
+  defp random_uppercase(char) do
+    if :rand.uniform() < 0.5 do
+      String.upcase(char)
+    else
+      String.downcase(char)
+    end
+  end
+
 end
