@@ -32,19 +32,12 @@ jobs:
       - name: Compile the project
         run: mix compile
 
-      - name: Run tests with JUnit formatter
+      - name: Run tests
         env:
           MIX_ENV: test
         run: |
-          mkdir -p test_results
-          mix test --formatter ExJUnitFormatter --output test_results/junit.xml
-
-      - name: Upload JUnit Test Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: junit-test-report
-          path: test_results/junit.xml
+          mkdir -p test_results cover
+          mix test
 
       - name: Upload Coverage Report
         if: always()

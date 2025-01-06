@@ -27,8 +27,8 @@ defmodule PasswordGenerator.MixProject do
 
   defp deps do
     [
-      {:ex_junit_formatter, "~> 3.1", only: :test},
-      {:excoveralls, "~> 0.18", only: :test}
+      {:excoveralls, "~> 0.18", only: :test},
+      {:junit_formatter, "~> 3.4", only: [:test]}
     ]
   end
 end
