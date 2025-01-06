@@ -55,6 +55,6 @@ jobs:
 
       - name: Publish Test Results to GitHub Checks
         if: always()
-        uses: nicholasjackson/github-action-junit-report@v2
+        uses: mikepenz/action-junit-report@v5
         with:
-          path: test_results/junit.xml
+            report_paths: test_results/junit.xml
