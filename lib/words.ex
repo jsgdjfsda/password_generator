@@ -1,27 +1,41 @@
 defmodule PasswordGenerator.Words do
-  @words ~w(
-    apple banana cherry dolphin elephant falcon giraffe
-    hamburger igloo jacket kangaroo lemon monkey notebook
-    orange penguin queen rabbit sunset turtle umbrella
-    violin whale xylophone yellow zebra
-  )
+  @dict_file "dict/rare_pl.dict"
+  @external_resource @dict_file
+
+  @words (case File.read(@dict_file) do
+           {:ok, content} ->
+             content
+             |> String.split("\n")
+             |> Enum.filter(&(String.length(&1) > 0))
+           {:error, _} ->
+             IO.warn("Dictionary file #{@dict_file} not found. Using empty word list.")
+             []
+         end)
 
   def generate(options) do
-    num_words = Enum.random(2..4)
-
     password =
-      1..num_words
-      |> Enum.map(fn _ -> Enum.random(@words) end)
+      options.min_length..options.max_length
+      |> Enum.random()
+      |> generate_word_list(options)
       |> transform_words(options)
       |> Enum.join(options.separator)
 
     {password, options}
   end
 
+  defp generate_word_list(word_count, _options) do
+    Enum.map(1..word_count, fn _ ->
+      @words
+      |> Enum.filter(&(String.length(&1) > 2)) # Filter out too short words
+      |> Enum.random()
+      |> String.trim()
+    end)
+  end
+
   defp transform_words(words, options) do
     words
     |> Enum.map(fn word ->
-      word = if options.uppercase, do: randomize_case(word), else: word
+      word = if options.uppercase, do: capitalize_first(word), else: word
 
       if options.numbers do
         word <> Integer.to_string(Enum.random(0..9))
@@ -31,19 +45,8 @@ defmodule PasswordGenerator.Words do
     end)
   end
 
-  defp randomize_case(word) do
-    word
-    |> String.graphemes()
-    |> Enum.map(&random_uppercase/1)
-    |> Enum.join()
+  defp capitalize_first(<<first::utf8, rest::binary>>) do
+    String.upcase(<<first::utf8>>) <> rest
   end
-
-  defp random_uppercase(char) do
-    if :rand.uniform() < 0.5 do
-      String.upcase(char)
-    else
-      String.downcase(char)
-    end
-  end
-
+  defp capitalize_first(other), do: other
 end

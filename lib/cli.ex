@@ -1,4 +1,3 @@
-# File: lib/password_generator/cli.ex
 defmodule PasswordGenerator.CLI do
   def main(args) do
     args
@@ -46,7 +45,7 @@ defmodule PasswordGenerator.CLI do
   end
 
   defp handle_generated_password({password, options}) do
-    IO.puts("Generated password: #{password}")
+    IO.puts(password)
 
     if options.file do
       File.write!(options.file, password)
