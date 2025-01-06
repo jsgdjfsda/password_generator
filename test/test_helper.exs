@@ -1,1 +1,1 @@
-ExUnit.start()
+ExUnit.start(formatters: [JUnitFormatter, ExUnit.CLIFormatter])

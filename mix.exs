@@ -27,7 +27,7 @@ defmodule PasswordGenerator.MixProject do
 
   defp deps do
     [
-      # Add ExCoveralls for test coverage reporting
+      {:ex_junit_formatter, "~> 3.1", only: :test},
       {:excoveralls, "~> 0.18", only: :test}
     ]
   end
