@@ -21,7 +21,7 @@ defmodule PasswordGenerator.CLI do
         ]
       )
 
-    %{
+    options = %{
       type: opts[:type] || "chars",
       min_length: opts[:min_length] || 8,
       max_length: opts[:max_length] || 16,
@@ -31,6 +31,11 @@ defmodule PasswordGenerator.CLI do
       separator: opts[:separator] || "-",
       file: opts[:file]
     }
+    if options.max_length < options.min_length do
+      raise ArgumentError,
+            "max_length (#{options.max_length}) must be greater than min_length (#{options.min_length})."
+    end
+    options
   end
 
   defp generate_password(options) do
