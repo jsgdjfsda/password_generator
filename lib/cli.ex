@@ -45,11 +45,11 @@ defmodule PasswordGenerator.CLI do
   end
 
   defp handle_generated_password({password, options}) do
-    IO.puts(password)
-
     if options.file do
       File.write!(options.file, password)
       IO.puts("Password has been saved to #{options.file}")
+    else
+      IO.puts(password)
     end
   end
 end
