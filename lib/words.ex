@@ -1,4 +1,5 @@
 defmodule PasswordGenerator.Words do
+  # TODO: add the option to select a dictionary
   @dict_file "dict/rare_pl.dict"
   @external_resource @dict_file
 
@@ -8,8 +9,8 @@ defmodule PasswordGenerator.Words do
              |> String.split("\n")
              |> Enum.filter(&(String.length(&1) > 0))
            {:error, _} ->
-             IO.warn("Dictionary file #{@dict_file} not found. Using empty word list.")
-             []
+             IO.warn("Dictionary file #{@dict_file} not found. Using sample built-in list.")
+             ~w(zażółć gęślą jaźń człowiecze)
          end)
 
   def generate(options) do
@@ -26,7 +27,7 @@ defmodule PasswordGenerator.Words do
   defp generate_word_list(word_count, _options) do
     Enum.map(1..word_count, fn _ ->
       @words
-      |> Enum.filter(&(String.length(&1) > 2)) # Filter out too short words
+      |> Enum.filter(&(String.length(&1) > 2))
       |> Enum.random()
       |> String.trim()
     end)
